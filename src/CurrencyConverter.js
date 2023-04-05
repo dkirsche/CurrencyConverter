@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import curve from '@curvefi/api';
 
 const CurrencyConverter = () => {
   const [conversionRate, setConversionRate] = useState(null);
+  const [expectedRate, setExpectedRate] = useState(null);
 
   useEffect(() => {
     const fetchConversionRate = async () => {
@@ -21,7 +23,21 @@ const CurrencyConverter = () => {
       }
     };
 
+    const fetchExpectedRate = async () => {
+      try {
+        await curve.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
+        await curve.factory.fetchPools();
+        await curve.cryptoFactory.fetchPools();
+
+        const { output } = await curve.router.getBestRouteAndOutput('USDC', 'EURS', '100');
+        setExpectedRate(output);
+      } catch (error) {
+        console.error('Error fetching expected rate:', error);
+      }
+    };
+
     fetchConversionRate();
+    fetchExpectedRate();
   }, []);
 
   return (
@@ -32,6 +48,13 @@ const CurrencyConverter = () => {
         </p>
       ) : (
         <p>Loading conversion rate...</p>
+      )}
+      {expectedRate ? (
+        <p>
+          Expected conversion rate from Curve (USDC to EURS): <strong>{expectedRate}</strong>
+        </p>
+      ) : (
+        <p>Loading expected rate...</p>
       )}
     </div>
   );
