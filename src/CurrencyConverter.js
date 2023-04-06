@@ -5,6 +5,7 @@ import curve from '@curvefi/api';
 const CurrencyConverter = () => {
   const [conversionRate, setConversionRate] = useState(null);
   const [expectedRate, setExpectedRate] = useState(null);
+  const [gasFee, setGasFee] = useState(null);
 
   useEffect(() => {
     const fetchConversionRate = async () => {
@@ -23,21 +24,25 @@ const CurrencyConverter = () => {
       }
     };
 
-    const fetchExpectedRate = async () => {
+    const fetchExpectedRateAndGasFee = async () => {
       try {
         await curve.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
         await curve.factory.fetchPools();
         await curve.cryptoFactory.fetchPools();
-
-        const { output } = await curve.router.getBestRouteAndOutput('USDC', 'EURS', '100');
+        
+        const gas = await curve.router.estimateGas.swap('USDC', 'EURS', '1000');
+        const { output } = await curve.router.getBestRouteAndOutput('USDC', 'EURS', '1000');
+        
+        console.log(gas)
         setExpectedRate(output);
+        setGasFee(gas);
       } catch (error) {
-        console.error('Error fetching expected rate:', error);
+        console.error('Error fetching expected rate and gas fee:', error);
       }
     };
 
     fetchConversionRate();
-    fetchExpectedRate();
+    fetchExpectedRateAndGasFee();
   }, []);
 
   return (
@@ -55,6 +60,13 @@ const CurrencyConverter = () => {
         </p>
       ) : (
         <p>Loading expected rate...</p>
+      )}
+      {gasFee!== null ? (
+        <p>
+          Gas fee for the swap (USDC to EURS): <strong>{gasFee.toString()}</strong>
+        </p>
+      ) : (
+        <p>Loading gas fee...</p>
       )}
     </div>
   );
