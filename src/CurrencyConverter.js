@@ -3,12 +3,12 @@ import axios from 'axios';
 import curve from '@curvefi/api';
 
 const CurrencyConverter = () => {
-  const [conversionRate, setConversionRate] = useState(null);
-  const [expectedRate, setExpectedRate] = useState(null);
-  const [gasFee, setGasFee] = useState(null);
+  const [apiConversionRate, setApiConversionRate] = useState(null);
+  const [ethereumConversionRate, setEthereumConversionRate] = useState(null);
+  const [polygonConversionRate, setPolygonConversionRate] = useState(null);
 
   useEffect(() => {
-    const fetchConversionRate = async () => {
+    const fetchApiConversionRate = async () => {
       try {
         const response = await axios.get(
           'https://api.apilayer.com/exchangerates_data/latest?base=USD&symbols=EUR',
@@ -18,55 +18,61 @@ const CurrencyConverter = () => {
             },
           }
         );
-        setConversionRate(response.data.rates.EUR);
+        setApiConversionRate(response.data.rates.EUR);
       } catch (error) {
-        console.error('Error fetching conversion rate:', error);
+        console.error('Error fetching API conversion rate:', error);
       }
     };
 
-    const fetchExpectedRateAndGasFee = async () => {
+    fetchApiConversionRate();
+  }, []);
+
+  useEffect(() => {
+    const fetchConversionRates = async () => {
       try {
+        // Fetch Ethereum conversion rate
         await curve.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
         await curve.factory.fetchPools();
         await curve.cryptoFactory.fetchPools();
-        
-        const gas = await curve.router.estimateGas.swap('USDC', 'EURS', '1000');
-        const { output } = await curve.router.getBestRouteAndOutput('USDC', 'EURS', '1000');
-        
-        console.log(gas)
-        setExpectedRate(output);
-        setGasFee(gas);
+        const { output: ethOutput } = await curve.router.getBestRouteAndOutput('USDC', 'EURS', '1000');
+        setEthereumConversionRate(ethOutput);
+
+        // Fetch Polygon conversion rate
+        await curve.init('Infura', { network: 'matic', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 137 });
+        await curve.factory.fetchPools();
+        await curve.cryptoFactory.fetchPools();
+        const { output: polyOutput } = await curve.router.getBestRouteAndOutput('USDC', '0xe111178a87a3bff0c8d18decba5798827539ae99', '1000');
+        setPolygonConversionRate(polyOutput);
       } catch (error) {
-        console.error('Error fetching expected rate and gas fee:', error);
+        console.error('Error fetching conversion rates:', error);
       }
     };
 
-    fetchConversionRate();
-    fetchExpectedRateAndGasFee();
+    fetchConversionRates();
   }, []);
 
   return (
     <div>
-      {conversionRate ? (
+      {apiConversionRate ? (
         <p>
-          Current conversion rate (USD to EUR): <strong>{conversionRate}</strong>
+          Standard Markets: <strong>{apiConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading conversion rate...</p>
+        <p>Loading API conversion rate...</p>
       )}
-      {expectedRate ? (
+      {ethereumConversionRate ? (
         <p>
-          Expected conversion rate from Curve (USDC to EURS): <strong>{expectedRate}</strong>
+          Ethereum: <strong>{ethereumConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading expected rate...</p>
+        <p>Loading Ethereum conversion rate...</p>
       )}
-      {gasFee!== null ? (
+      {polygonConversionRate ? (
         <p>
-          Gas fee for the swap (USDC to EURS): <strong>{gasFee.toString()}</strong>
+          Polygon: <strong>{polygonConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading gas fee...</p>
+        <p>Loading Polygon conversion rate...</p>
       )}
     </div>
   );
