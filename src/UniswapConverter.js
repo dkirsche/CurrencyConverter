@@ -32,12 +32,7 @@ const UniswapConverter = () => {
           ,
           options
         );
-        console.log(`Quote Exact In: ${route.quote.toFixed(route.quote.currency.decimals)}`);
-        console.log(`Gas Adjusted Quote In: ${route.quoteGasAdjusted.toFixed(route.quote.currency.decimals)}`);
-        console.log(`Gas Used USD: ${route.estimatedGasUsedUSD.toFixed(2)}`);
-        console.log(route.trade.outputAmount.toFixed(route.quote.currency.decimals));
-        console.log(route.quote.toFixed(route.quoteGasAdjusted.currency.decimals));
-        console.log(route);
+        
         setUniswapConversionRate(route.quote.toFixed(route.quote.currency.decimals));
         setUniswapGasFee(route.estimatedGasUsedUSD.toFixed(2));
       } catch (error) {
