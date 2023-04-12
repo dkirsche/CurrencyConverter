@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import curve from '@curvefi/api';
+import { ethers } from 'ethers';
 
 const CurrencyConverter = () => {
   const [apiConversionRate, setApiConversionRate] = useState(null);
   const [ethereumConversionRate, setEthereumConversionRate] = useState(null);
   const [polygonConversionRate, setPolygonConversionRate] = useState(null);
+  const [estimatedSwapGasFee, setEstimatedSwapGasFee] = useState(null);
+
+  const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
+  const EURS = '0xdB25f211AB05b1c97D595516F45794528a807ad8';
 
   useEffect(() => {
     const fetchApiConversionRate = async () => {
@@ -23,8 +28,23 @@ const CurrencyConverter = () => {
         console.error('Error fetching API conversion rate:', error);
       }
     };
+    //estimating swap fees for Curve on Ethereum. This is a rough estimate because the curve.router.estimateGas.swap() method requires wallet approval to work.
+    const estimateSwapGasFee = async () => {
+      try {
+        const ethPriceResponse = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+        const ethPrice = ethPriceResponse.data.ethereum.usd;
+        const gasUnits = 200000;
+        const gasPrice = await new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/c3211f935cc24cbaa35e33b66930e06d').getGasPrice();
+        const gasFeeInETH = ethers.utils.formatEther(gasPrice.mul(gasUnits));
+        const gasFeeInUSD = (parseFloat(gasFeeInETH) * ethPrice).toFixed(2);
+        setEstimatedSwapGasFee(gasFeeInUSD);
+      } catch (error) {
+        console.error('Error estimating swap gas fee:', error);
+      }
+    };
 
     fetchApiConversionRate();
+    estimateSwapGasFee();
   }, []);
 
   useEffect(() => {
@@ -34,8 +54,9 @@ const CurrencyConverter = () => {
         await curve.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
         await curve.factory.fetchPools();
         await curve.cryptoFactory.fetchPools();
-        const { output: ethOutput } = await curve.router.getBestRouteAndOutput('USDC', 'EURS', '1000');
-        setEthereumConversionRate(ethOutput);
+        const {  route, output  } = await curve.router.getBestRouteAndOutput(USDC, EURS, '1000');
+        console.log('route:', route.length);
+        setEthereumConversionRate(output.toString());
 
         // Fetch Polygon conversion rate
         await curve.init('Infura', { network: 'matic', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 137 });
@@ -66,6 +87,13 @@ const CurrencyConverter = () => {
         </p>
       ) : (
         <p>Loading Ethereum conversion rate...</p>
+      )}
+      {estimatedSwapGasFee ? (
+        <p>
+          Ethereum gas fee (USD): <strong>{estimatedSwapGasFee}</strong>
+        </p>
+      ) : (
+        <p>Loading Ethereum gas fee...</p>
       )}
       {polygonConversionRate ? (
         <p>
