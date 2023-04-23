@@ -65,17 +65,17 @@ const UniswapConverter = () => {
     <div>
       {uniswapConversionRate ? (
         <p>
-          Uniswap: <strong>{uniswapConversionRate}</strong>
+          Uniswap (Ethereum): <strong>{uniswapConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading Uniswap conversion rate...</p>
+        <p>Loading Uniswap (Ethereum) ...</p>
       )}
       {uniswapGasFee ? (
         <p>
-          Uniswap gas fee (USD): <strong>{uniswapGasFee}</strong>
+          gas fee (USD): <strong>{uniswapGasFee}</strong>
         </p>
       ) : (
-        <p>Loading Uniswap gas fee...</p>
+        <p>Loading gas fee...</p>
       )}
     </div>
   );

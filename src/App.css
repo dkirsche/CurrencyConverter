@@ -1,3 +1,26 @@
+body {
+  background-color: #282c34;
+}
+
+nav {
+  background-color: #282c34 !important;
+  box-shadow: none;
+}
+.description-section {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  max-width: 800px;
+  text-align: center;
+}
+.nav-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 20px; /* Adjust this value to your desired spacing */
+}
+
+
 .App {
   text-align: center;
 }
@@ -29,3 +52,5 @@
 .small {
   font-size: 0.75rem;
 }
+
+

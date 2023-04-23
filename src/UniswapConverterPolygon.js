@@ -52,14 +52,14 @@ const UniswapConverterPolygon = () => {
           Uniswap (Polygon): <strong>{uniswapConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading Uniswap conversion rate...</p>
+        <p>Loading Uniswap (Polygon) ...</p>
       )}
       {uniswapGasFee ? (
         <p>
-          Uniswap (Polygon) gas fee (USD): <strong>{uniswapGasFee}</strong>
+          gas fee (USD): <strong>{uniswapGasFee}</strong>
         </p>
       ) : (
-        <p>Loading Uniswap gas fee...</p>
+        <p>Loading gas fee...</p>
       )}
     </div>
   );

@@ -79,28 +79,28 @@ const CurrencyConverter = () => {
           Standard Markets: <strong>{apiConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading API conversion rate...</p>
+        <p>Loading Standard Markets...</p>
       )}
       {ethereumConversionRate ? (
         <p>
-          Ethereum: <strong>{ethereumConversionRate}</strong>
+          Circle.fi (Ethereum): <strong>{ethereumConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading Ethereum conversion rate...</p>
+        <p>Loading Circle.fi (Ethereum)...</p>
       )}
       {estimatedSwapGasFee ? (
         <p>
-          Ethereum gas fee (USD): <strong>{estimatedSwapGasFee}</strong>
+          gas fee (USD): <strong>{estimatedSwapGasFee}</strong>
         </p>
       ) : (
-        <p>Loading Ethereum gas fee...</p>
+        <p>Loading gas fee...</p>
       )}
       {polygonConversionRate ? (
         <p>
-          Polygon: <strong>{polygonConversionRate}</strong>
+          Circle.fi (Polygon): <strong>{polygonConversionRate}</strong>
         </p>
       ) : (
-        <p>Loading Polygon conversion rate...</p>
+        <p>Loading Circle.fi (Polygon)...</p>
       )}
     </div>
   );
