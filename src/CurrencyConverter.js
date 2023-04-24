@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import curve from '@curvefi/api';
 import { ethers } from 'ethers';
+import ConversionRateDisplay from './ConversionRateDisplay';
 
 const CurrencyConverter = () => {
   const [apiConversionRate, setApiConversionRate] = useState(null);
@@ -74,34 +75,21 @@ const CurrencyConverter = () => {
 
   return (
     <div>
-      {apiConversionRate ? (
-        <p>
-          Standard Markets: <strong>{apiConversionRate}</strong>
-        </p>
-      ) : (
-        <p>Loading Standard Markets...</p>
-      )}
-      {ethereumConversionRate ? (
-        <p>
-          Circle.fi (Ethereum): <strong>{ethereumConversionRate}</strong>
-        </p>
-      ) : (
-        <p>Loading Circle.fi (Ethereum)...</p>
-      )}
-      {estimatedSwapGasFee ? (
-        <p>
-          gas fee (USD): <strong>{estimatedSwapGasFee}</strong>
-        </p>
-      ) : (
-        <p>Loading gas fee...</p>
-      )}
-      {polygonConversionRate ? (
-        <p>
-          Circle.fi (Polygon): <strong>{polygonConversionRate}</strong>
-        </p>
-      ) : (
-        <p>Loading Circle.fi (Polygon)...</p>
-      )}
+      <ConversionRateDisplay
+      rate={apiConversionRate}
+      gasFee={20}
+      label="Standard Market"
+    />
+      <ConversionRateDisplay
+      rate={ethereumConversionRate}
+      gasFee={estimatedSwapGasFee}
+      label="Circle.fi (Ethereum)"
+    />
+      <ConversionRateDisplay
+      rate={polygonConversionRate}
+      gasFee={0.04}
+      label="Circle.fi (Polygon)"
+    />
     </div>
   );
 };
