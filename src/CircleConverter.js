@@ -11,8 +11,8 @@ export const fetchCircleData = async () => {
     await curve.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
     await curve.factory.fetchPools();
     await curve.cryptoFactory.fetchPools();
-    const { route, output } = await curve.router.getBestRouteAndOutput(USDC, EURS, '1000');
-    const ethereumConversionRate = output.toString();
+    const { output: ethOutput } = await curve.router.getBestRouteAndOutput(USDC, EURS, '1000');
+    const ethereumConversionRate = ethOutput.toString();
 
     // Estimate swap gas fee for Curve on Ethereum
     const ethPriceResponse = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
