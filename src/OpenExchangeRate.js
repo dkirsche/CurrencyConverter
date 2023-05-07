@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const fetchApiConversionRate = async () => {
   try {
@@ -21,4 +21,4 @@ const fetchApiConversionRate = async () => {
   }
 };
 
-export default fetchApiConversionRate;
+module.exports = fetchApiConversionRate;

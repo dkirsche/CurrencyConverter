@@ -1,17 +1,19 @@
-import axios from 'axios';
-import curve from '@curvefi/api';
-import { ethers } from 'ethers';
+const axios = require('axios');
+const ethers = require('ethers');
+const curve = require('@curvefi/api');
 
 const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
 const EURS = '0xdB25f211AB05b1c97D595516F45794528a807ad8';
 
-export const fetchCircleData = async () => {
+const fetchCircleData = async () => {
   try {
     // Fetch Ethereum conversion rate
-    await curve.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
-    await curve.factory.fetchPools();
-    await curve.cryptoFactory.fetchPools();
-    const { output: ethOutput } = await curve.router.getBestRouteAndOutput(USDC, EURS, '1000');
+    console.log (curve)
+    console.log (curve.default.chainId)
+    await curve.default.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
+    await curve.default.factory.fetchPools();
+    await curve.default.cryptoFactory.fetchPools();
+    const { output: ethOutput } = await curve.default.router.getBestRouteAndOutput(USDC, EURS, '1000');
     const ethereumConversionRate = ethOutput.toString();
 
     // Estimate swap gas fee for Curve on Ethereum
@@ -34,13 +36,13 @@ export const fetchCircleData = async () => {
     return null;
   }
 };
-export const fetchCirclePolygonData = async () => {
+const fetchCirclePolygonData = async () => {
     try {
       // Fetch Ethereum conversion rate
-      await curve.init('Infura', { network: 'matic', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 137 });
-      await curve.factory.fetchPools();
-      await curve.cryptoFactory.fetchPools();
-      const { output: polyOutput } = await curve.router.getBestRouteAndOutput('USDC', '0xe111178a87a3bff0c8d18decba5798827539ae99', '1000');
+      await curve.default.init('Infura', { network: 'matic', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 137 });
+      await curve.default.factory.fetchPools();
+      await curve.default.cryptoFactory.fetchPools();
+      const { output: polyOutput } = await curve.default.router.getBestRouteAndOutput('USDC', '0xe111178a87a3bff0c8d18decba5798827539ae99', '1000');
       const polyConversionRate = polyOutput.toString();
       const estimatedSwapGasFee = 0.04;
   
@@ -58,4 +60,7 @@ export const fetchCirclePolygonData = async () => {
     }
   };
 
-export default fetchCircleData;
+  module.exports = {
+    fetchCircleData,
+    fetchCirclePolygonData,
+  };

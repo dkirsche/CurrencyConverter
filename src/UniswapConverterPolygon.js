@@ -1,7 +1,7 @@
-import { Token, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core';
-import { Protocol } from '@uniswap/router-sdk';
-import { ChainId, AlphaRouter, SwapOptionsSwapRouter02, SwapType } from '@uniswap/smart-order-router';
-import { ethers } from 'ethers';
+const { Token, CurrencyAmount, Percent, TradeType } = require('@uniswap/sdk-core');
+const { Protocol } = require('@uniswap/router-sdk');
+const { ChainId, AlphaRouter, SwapOptionsSwapRouter02, SwapType } = require('@uniswap/smart-order-router');
+const ethers = require('ethers');
 
 const fetchUniswapPolygonExhangeRate = async () => {
   try {
@@ -11,7 +11,7 @@ const fetchUniswapPolygonExhangeRate = async () => {
 
     const router = new AlphaRouter({ chainId: ChainId.POLYGON, provider });
 
-    const options: SwapOptionsSwapRouter02 = {
+    const options = {
       recipient: '0x420ED47eA047F125cac67D0B7621C958444eD18A',
       slippageTolerance: new Percent(5, 1000),
       deadline: Math.floor(Date.now() / 1000 + 1800),
@@ -41,5 +41,5 @@ const fetchUniswapPolygonExhangeRate = async () => {
   }
 };
 
-export default fetchUniswapPolygonExhangeRate;
+module.exports = fetchUniswapPolygonExhangeRate;
 

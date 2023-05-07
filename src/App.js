@@ -2,11 +2,8 @@
 //import fetchMarketExchangeRate from './MarketExchangeRate';
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import fetchApiConversionRate from './OpenExchangeRate';
-import {fetchCircleData,fetchCirclePolygonData} from './CircleConverter';
-import UniswapConverter from './UniswapConverter';
-import UniswapConverterPolygon from './UniswapConverterPolygon';
 import ConversionRatesTable from './ConversionRatesTable';
+import axios from 'axios';
 
 function App() {
   const [conversionRates, setConversionRates] = useState([
@@ -19,23 +16,13 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const marketData = await fetchApiConversionRate();
-      const curveData = await fetchCircleData();
-      const curvePolygonData = await fetchCirclePolygonData();
-      const uniswapData = await UniswapConverter();
-      const uniswapPolygonData = await UniswapConverterPolygon();
-
-      setConversionRates(prevRates => prevRates.map((rate, index) => {
-        const newData = [
-          marketData,
-          curveData,
-          curvePolygonData,
-          uniswapData,
-          uniswapPolygonData
-        ][index];
-
-        return { ...rate, ...newData };
-      }));
+      try {
+        console.log(`the base url is ${process.env.REACT_APP_API_BASE_URL}`)
+        const response = await axios.get('/api/conversionRates');
+        setConversionRates(response.data);
+      } catch (error) {
+        console.error('Error fetching conversion rates:', error);
+      }
     };
 
     fetchData();
