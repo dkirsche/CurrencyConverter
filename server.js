@@ -3,7 +3,7 @@ const axios = require('axios');
 const cache = require('memory-cache');
 const path = require('path');
 const fetchApiConversionRate = require('./src/OpenExchangeRate');
-const { fetchCircleData, fetchCirclePolygonData } = require('./src/CircleConverter');
+const { fetchCurveData, fetchCurvePolygonData } = require('./src/CurveConverter');
 const UniswapConverter = require('./src/UniswapConverter');
 const UniswapConverterPolygon = require('./src/UniswapConverterPolygon');
 
@@ -15,8 +15,8 @@ const fetchApiData = async () => {
   // Fetch data from all APIs and return combined results
   // Replace this with the actual API calls and data processing
   const marketData = await fetchApiConversionRate();
-  const curveData = await fetchCircleData();
-  const curvePolygonData = await fetchCirclePolygonData();
+  const curveData = await fetchCurveData();
+  const curvePolygonData = await fetchCurvePolygonData();
   const uniswapData = await UniswapConverter();
   const uniswapPolygonData = await UniswapConverterPolygon();
 

@@ -5,11 +5,9 @@ const curve = require('@curvefi/api');
 const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
 const EURS = '0xdB25f211AB05b1c97D595516F45794528a807ad8';
 
-const fetchCircleData = async () => {
+const fetchCurveData = async () => {
   try {
     // Fetch Ethereum conversion rate
-    console.log (curve)
-    console.log (curve.default.chainId)
     await curve.default.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
     await curve.default.factory.fetchPools();
     await curve.default.cryptoFactory.fetchPools();
@@ -32,11 +30,11 @@ const fetchCircleData = async () => {
       total,
     };
   } catch (error) {
-    console.error('Error fetching Circle conversion data:', error);
+    console.error('Error fetching Curve conversion data:', error);
     return null;
   }
 };
-const fetchCirclePolygonData = async () => {
+const fetchCurvePolygonData = async () => {
     try {
       // Fetch Ethereum conversion rate
       await curve.default.init('Infura', { network: 'matic', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 137 });
@@ -55,12 +53,12 @@ const fetchCirclePolygonData = async () => {
         total,
       };
     } catch (error) {
-      console.error('Error fetching Circle on Polygon conversion data:', error);
+      console.error('Error fetching Curve on Polygon conversion data:', error);
       return null;
     }
   };
 
   module.exports = {
-    fetchCircleData,
-    fetchCirclePolygonData,
+    fetchCurveData,
+    fetchCurvePolygonData,
   };
