@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const axios = require('axios');
 const cache = require('memory-cache');
 const path = require('path');

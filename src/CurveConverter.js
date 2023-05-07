@@ -8,7 +8,7 @@ const EURS = '0xdB25f211AB05b1c97D595516F45794528a807ad8';
 const fetchCurveData = async () => {
   try {
     // Fetch Ethereum conversion rate
-    await curve.default.init('Infura', { network: 'homestead', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 1 });
+    await curve.default.init('Infura', { network: 'homestead', apiKey: process.env.INFURA_API_KEY }, { chainId: 1 });
     await curve.default.factory.fetchPools();
     await curve.default.cryptoFactory.fetchPools();
     const { output: ethOutput } = await curve.default.router.getBestRouteAndOutput(USDC, EURS, '1000');
@@ -37,7 +37,7 @@ const fetchCurveData = async () => {
 const fetchCurvePolygonData = async () => {
     try {
       // Fetch Ethereum conversion rate
-      await curve.default.init('Infura', { network: 'matic', apiKey: 'c3211f935cc24cbaa35e33b66930e06d' }, { chainId: 137 });
+      await curve.default.init('Infura', { network: 'matic', apiKey: process.env.INFURA_API_KEY }, { chainId: 137 });
       await curve.default.factory.fetchPools();
       await curve.default.cryptoFactory.fetchPools();
       const { output: polyOutput } = await curve.default.router.getBestRouteAndOutput('USDC', '0xe111178a87a3bff0c8d18decba5798827539ae99', '1000');
