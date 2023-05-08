@@ -17,7 +17,6 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(`the base url is ${process.env.REACT_APP_API_BASE_URL}`)
         const response = await axios.get('/api/conversionRates');
         setConversionRates(response.data);
       } catch (error) {
